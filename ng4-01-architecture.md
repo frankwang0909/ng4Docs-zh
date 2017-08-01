@@ -378,7 +378,7 @@ src/app/hero-list.component.ts (constructor)
 content_copyconstructor(private service: HeroService) { }
 ```
 
-当 Angular 创建组建时，它会先向注入器（ injector） 请求组件所需要的服务。
+当 Angular 创建组件时，它会先向注入器（ injector） 请求组件所需要的服务。
 
 注入器维护着一个之前创建的服务实例的容器。如果被请求的服务实例不在这个容器中，注入器在返回服务给 Angular 之前，会创建这个服务的实例并把它添加到容器中。当所有请求的服务都被解决并返回后，Angular 会调用组件的构造函数并把这些服务作为参数传入。这就是依赖注入。
 
