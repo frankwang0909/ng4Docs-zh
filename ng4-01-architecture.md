@@ -135,15 +135,15 @@ Angular 以 一系列的JavaScript 模块的形式推出市场。你可以把他
 	<hero-detail *ngIf="selectedHero" [hero]="selectedHero"></hero-detail>
 
 
-虽然这个模板使用典型的 HTML 元素 比如 <h2> 和 <p>， 它有些差异。
-像 *ngFor, {{hero.name}}, (click), [hero] 以及 <hero-detail> 这些代码，它们使用的是 Angular的模板语法。
+虽然这个模板使用典型的 HTML 元素 比如 `<h2>` 和 `<p>`， 它有些差异。
+像 `*ngFor`, `{{hero.name}}`, `(click)`,` [hero]` 以及 `<hero-detail>` 这些代码，它们使用的是 Angular的模板语法。
 
-这个模板最后一行，<hero-detail> 标签 是一个自定义的元素，用来展示一个新的组件，即 HeroDetailComponent.
+这个模板最后一行，`<hero-detail>` 标签 是一个自定义的元素，用来展示一个新的组件，即 HeroDetailComponent.
 
 HeroDetailComponent 与 HeroListComponent 组件不同，它用于展示关于某个特定 hero 的事实。
 这个 hero 是用户从 HeroListComponent 的列表中选择的。HeroDetailComponent 是 HeroListComponent 的子组件。
 
-注意 <hero-detail> 与原生的 HTML 元素 融洽地放置在一起。 在同一个布局中，自定义组件与原生 HTML 完美地混合在一起。
+注意 `<hero-detail>` 与原生的 HTML 元素 融洽地放置在一起。 在同一个布局中，自定义组件与原生 HTML 完美地混合在一起。
 
 
 
@@ -174,7 +174,7 @@ HeroDetailComponent 与 HeroListComponent 组件不同，它用于展示关于�
 
 以下是一些最有用的 @Component 的配置选项：
 
-1）selector: CSS 选择器。告诉 Angular 创建这个组件的实例并将这个实例插入到 CSS 选择器（<hero-list>标签） 所在的父级 HTML 上。如果一个 app 的 HTML 包含 <hero-list> 标签， Angular 会将组件 HeroListComponent 视图的实例插入到这个标签之间。
+1）selector: CSS 选择器。告诉 Angular 创建这个组件的实例并将这个实例插入到 CSS 选择器（`<hero-list>`标签） 所在的父级 HTML 上。如果一个 app 的 HTML 包含 <hero-list> 标签， Angular 会将组件 HeroListComponent 视图的实例插入到这个标签之间。
 
 2）templateUlr： 这个组件的 HTML 模板所在的相对位置。
 
@@ -205,14 +205,14 @@ Angular 支持数据绑定，一种使模板各部分与组件各部分相互配
 	<li (click)="selectHero(hero)"></li>
 
 
-1）插值表达式（interpolation）：插值表达式 {{ hero.name }} 在 <li> 元素之间展示组件的 hero.name 属性值。
+1）插值表达式（interpolation）：插值表达式 `{{ hero.name }}` 在 `<li> `元素之间展示组件的 hero.name 属性值。
 
-2）属性绑定（property binding）：属性绑定 [hero] 将父组件 HeroListComponent 的 selectedHero 的值传递给向子组件 <hero-detail> 的 hero 属性。
+2）属性绑定（property binding）：属性绑定 `[hero]` 将父组件 HeroListComponent 的 selectedHero 的值传递给向子组件 <hero-detail> 的 hero 属性。
 
-3）事件绑定（event binding）： 当用户点击一个 hero 的名字是，(click) 事件绑定调用了组件的 selectHero 方法。
+3）事件绑定（event binding）： 当用户点击一个 hero 的名字是，`(click)` 事件绑定调用了组件的 selectHero 方法。
 
 
-双向绑定是第四种重要的绑定方法。它使用 [(ngModel)] 指令，在一个表达式中同时绑定属性和事件。
+双向绑定是第四种重要的绑定方法。它使用 `[(ngModel)]` 指令，在一个表达式中同时绑定属性和事件。
 
 	<input [(ngModel)]="hero.name">
 
