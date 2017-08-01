@@ -15,7 +15,7 @@ Angular 应用是这样写的：编写有 Augular 的指令的 HTML 模板（tem
 
 Angular 应用是模块化的，并且 Angular 有自己的模块化系统，叫做 NgModules.
 
-Angular模块（NgModules） 很重要。这里会介绍模块（Modules），在 [NgModules]()章节会深入讲解模块与Angular模块（NgModules）。
+Angular模块（NgModules） 很重要。这里会介绍模块（Modules），在 NgModules 章节会深入讲解模块与Angular模块（NgModules）。
 
 每一个 Angular 应用至少有一个 NgModules 类，即根模块（ root module），通常命名为 AppModule.
 
@@ -102,8 +102,6 @@ Angular 以 一系列的JavaScript 模块的形式推出市场。你可以把他
 在之前的 根模块示例中，应用的模块需要使用 BrowserModule 里的素材。为了访问到这些素材，需要把 BrowserModule 添加到 @NgModule 的元数据中：
 
 	imports: [ BrowserModule ]
-
-
 这样，同时使用了 Angular和 JavaScript 的模块系统。
 
 因为它们使用相同的单词如 imports exports, 很容易搞混淆这两种模块系统。
@@ -133,7 +131,9 @@ export class HeroListComponent implements OnInit {
 }
 ```
 
-在用户使用应用程序的过程中，Angular 会创建、更新、销毁组件。在应用程序的生命周期的任意时刻，它都可以通过可选的生命周期钩子（lifecycle hooks）来作出响应，比如 上面声明的 ngOnInit() 钩子.
+在用户使用应用程序的过程中，Angular 会创建、更新、销毁组件。在应用程序的生命周期的任意时刻，它都可以通过可选的生命周期钩子（lifecycle hooks）来作出响应，比如 上面声明的 ngOnInit() 钩子。
+
+
 
 
 ## 3.模板 Templates
@@ -244,21 +244,18 @@ Angular 支持数据绑定，一种使模板各部分与组件各部分相互配
 
 在双向绑定中，数据的属性值像属性绑定一样，从组件流向 input 输入框。用户输入值改变，数据从 input　输入框流回到组件，将最后的值重置为组件里的属性的值，正如事件绑定一样。
 
-Angular processes all data bindings once per JavaScript event cycle, from the root of the application component tree through all child components.
-
 每次 JavaScript 事件循环，Angular 都会处理所有的数据绑定，从应用组件的根部到所有的子组件。
-
-Data binding plays an important role in communication between a template and its component.
 
 数据绑定在组件与其模板的通讯中起着重要的作用。
 
 ![](https://angular.io/generated/images/guide/architecture/component-databinding.png)
 
-Data binding is also important for communication between parent and child components.
+
 
 数据绑定在父、子组件的通讯中也起着重要的作用。
 
 ![](https://angular.io/generated/images/guide/architecture/parent-child-binding.png)
+
 
 
 ## 6. 指令 Directives
@@ -302,6 +299,8 @@ Angular 还有许多指令。有些可以改变布局结构（比如 ngSwitch）
 
 当然，我们还可以编写自定义的指令。像 HeroListComponent 的组件，可以看做是一种自定义指令。
 
+
+
 ## 7. 服务 Services
 
 服务（Service）是一个很宽泛的类别，包括应用需要的任何值、函数、或者功能。
@@ -309,8 +308,6 @@ Angular 还有许多指令。有些可以改变布局结构（比如 ngSwitch）
 几乎任何东西都可以是服务。服务是一个典型的类，它作用有限且定义明确。它应该很好地完成特定的任务。
 
 例如：
-
-logging service
 
 - logging service 日志服务
 - data service 数据服务
@@ -364,12 +361,109 @@ content_copyexport class HeroService {
 
 Angular 并不强制要求执行这些原则。它不会抱怨你用 3000 行代码写一个 kitchen sink 组件。
 
-Angular does help you *follow* these principles by making it easy to factor your application logic into services and make those services available to components through *dependency injection*.
-
 Angular 帮我们遵循这些原则，它使得在服务中考虑应用逻辑很容易，并且通过`依赖注入（dependency injection）`使得服务在组件中可用。
 
 
 
 
 ## 8. 依赖注入 Dependency injection
+
+依赖注入 是提供类的新的实例的一种方式，这个实例有它所需的所有依赖。大多数依赖都是服务。 Angular 使用依赖注入来为新的组件提供它们所需要的服务。
+
+Angular 通过查看组件构造函数的参数的类型来识别组件所需要的服务。例如，HeroListComponent 的构造函数需要一个 HeroService 类型的参数。
+
+src/app/hero-list.component.ts (constructor)
+
+```typescript
+content_copyconstructor(private service: HeroService) { }
+```
+
+当 Angular 创建组建时，它会先向注入器（ injector） 请求组件所需要的服务。
+
+注入器维护着一个之前创建的服务实例的容器。如果被请求的服务实例不在这个容器中，注入器在返回服务给 Angular 之前，会创建这个服务的实例并把它添加到容器中。当所有请求的服务都被解决并返回后，Angular 会调用组件的构造函数并把这些服务作为参数传入。这就是依赖注入。
+
+HeroService  注入的过程看起来像这样：
+
+![Service](https://angular.io/generated/images/guide/architecture/injector-injects.png)
+
+
+
+如果注入器没有 `HeroService`，它怎么知道如何创建一个`HeroService`呢？
+
+简单地说，我们必须在之前就已经注册过了`HeroService`的提供商（ **provider**）。 提供商能够创建并返回服务，通常它就是服务类本身。
+
+我们可以在模块或组件中注册**providers**. 
+
+通常，我们在**根模块**中添加**providers**, 这样服务的同一个实例在应用的每个地方都可用。
+
+src/app/app.module.ts (module providers)
+
+```
+content_copyproviders: [
+  BackendService,
+  HeroService,
+  Logger
+],
+```
+
+或者，添加在`@Component`的元数据中的**providers**属性中，注册在组件层级。
+
+src/app/hero-list.component.ts (component providers)
+
+```
+content_copy@Component({
+  selector:    'hero-list',
+  templateUrl: './hero-list.component.html',
+  providers:  [ HeroService ]
+})
+```
+
+注册在组件层级意味着在这个组件的每一个新的实例中，我们都会获得这个服务的新的实例。
+
+关于依赖注入需要记住的几个要点：
+
+- 依赖注入缠绕在 Angular 框架中，被到处使用。
+- 注入器是主要的机制。
+  -  注入器维持一个存放它所创建的服务实例的容器。
+  -  注入器从 提供商（provider）中创建一个新的服务实例。
+- 提供商是一个创建服务的配方。
+- 用 注入器注册提供商。
+
+
+
+### 结语：
+
+我们已经学习了一个 Angular 应用的八个主要构建单元的基础知识：
+
+- Modules 模块
+- Components 组件
+- Templates 模板
+- Metadata 元数据
+- Data binding 数据绑定
+- Directives 指令
+- Services 服务
+- Dependency injection 依赖注入
+
+
+
+这是 Angular　应用中其他一切的基础，有了这些基础就足以继续开发。但这没有包含我们所需要知道的所有内容。
+
+以下是其他重要的 Angular 特性和服务。 大部分将涵盖在这份文档中。
+
+- Animations 动画:  不需要深入了解动画技术或者CSS，使用 Angular 动画库给组件添加动画效果。
+- Change detection 变化检测: 变化检测文档将会涵盖 Angular 如何决定组件属性值是否已改变，何时更新视图，如何使用**zones**拦截异步活动，以及运行变化检测策略的。
+- Events 事件: 事件文档将涵盖通过订阅和发布事件的机制，如何使用组件和服务来唤起事件。
+- Forms 表单: 使用 基于HTML的验证和脏检查机制，支持复杂的数据输入情形。
+- HTTP: 通过 HTTP 客户端与服务端通讯以获取数据、保存数据以及来唤起 服务端的响应。
+- Lifecycle hooks  生命周期钩子:  利用组件的生命周期的关键时刻，从创建到销毁，应用生命周期钩子接口。
+- Pipes 管道:  使用模板中的管道来改变展示的值，从而改善用户体验。比如  `currency`这个管道表达式：
+
+> `price | currency:'USD':true`
+
+它将 42.33 的价格显示为 `$42.33`。
+
+- Router 路由:  在客户端应用中，从一个页面导航到另一个页面，从不离开浏览器。
+
+- Testing 测试:  使用 Angular Testing Platform，当应用的各个部分与 Angular 框架交互时，进行单元测试。
+
 
