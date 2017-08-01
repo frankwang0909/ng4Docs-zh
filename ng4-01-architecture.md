@@ -1,6 +1,6 @@
 # 初识 Angular 之（一）架构
 
-Angular 是一个构建客户端应用的框架。它使用 HTML 和 JavaScript 或者类可以被编译成 JavaScript（比如 TypeScript） 的语言。
+Angular 是一个构建客户端应用的框架。它使用 HTML 和 JavaScript 或者可以被编译成 JavaScript（比如 TypeScript） 的语言。
 
 Angular 框架由多个库文件(libraries)组成。其中， 有些是核心库，有些则是可选的。
 
