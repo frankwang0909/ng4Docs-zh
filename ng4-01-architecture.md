@@ -42,16 +42,18 @@ Angular模块（NgModules） 很重要。这里会介绍模块（Modules），�
 
 src/app/app.module.ts
 
-	import { NgModule } from '@angular/core';
-	import { BrowserModule } from '@angular/platform-browser';
-	@NgModule({
-	  imports:      [ BrowserModule ],
-	  providers:    [ Logger ],
-	  declarations: [ AppComponent ],
-	  exports:      [ AppComponent ],
-	  bootstrap:    [ AppComponent ]
-	})
-	export class AppModule { }
+```typescript
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+@NgModule({
+  imports:      [ BrowserModule ],
+  providers:    [ Logger ],
+  declarations: [ AppComponent ],
+  exports:      [ AppComponent ],
+  bootstrap:    [ AppComponent ]
+})
+export class AppModule { }
+```
 
 
 这里导出 AppComponent 只是为了演示如何导出的，在这个例子中不是必须的。根模块不需要导出任何东西，因为其他组件不需要导入这个根模块。
@@ -60,11 +62,12 @@ src/app/app.module.ts
 
 src/main.ts
 
-	import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-	import { AppModule } from './app/app.module';
+```typescript
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { AppModule } from './app/app.module';
 
-	platformBrowserDynamic().bootstrapModule(AppModule);
-
+platformBrowserDynamic().bootstrapModule(AppModule);
+```
 
 
 ### 1.1 Angular模块（NgModules） vs. JavaScript 模块
@@ -115,8 +118,22 @@ Angular 以 一系列的JavaScript 模块的形式推出市场。你可以把他
 
 例如，HeroListComponent 组件类有一个 hero 属性返回一个从服务（service）中获取的 heroes 数组。 HeroListComponent 还有一个 selectHero() 方法。当用户从列表中点击选中一个 hero 时，这个方法设置 selectedHero 属性。
 
-在用户使用应用程序的过程中，Angular 会创建、更新、销毁组件。在应用程序的生命周期的任意时刻，它都可以通过可选的生命周期钩子（lifecycle hooks）来作出响应，比如 上面声明的 ngOnInit() 钩子.
+```typescript
+export class HeroListComponent implements OnInit {
+  heroes: Hero[];
+  selectedHero: Hero;
 
+  constructor(private service: HeroService) { }
+
+  ngOnInit() {
+    this.heroes = this.service.getHeroes();
+  }
+
+  selectHero(hero: Hero) { this.selectedHero = hero; }
+}
+```
+
+在用户使用应用程序的过程中，Angular 会创建、更新、销毁组件。在应用程序的生命周期的任意时刻，它都可以通过可选的生命周期钩子（lifecycle hooks）来作出响应，比如 上面声明的 ngOnInit() 钩子.
 
 
 ## 3.模板 Templates
@@ -125,15 +142,17 @@ Angular 以 一系列的JavaScript 模块的形式推出市场。你可以把他
 
 除了有一点点差别，模板看起来像是普通的 HTML。
 
-	<h2>Hero List</h2>
-	<p><i>Pick a hero from the list</i></p>
-	<ul>
-		<li *ngFor="let hero of heroes" (click)="selectHero(hero)">
-		{{hero.name}}
-		</li>
-	</ul>
-	<hero-detail *ngIf="selectedHero" [hero]="selectedHero"></hero-detail>
 
+```html
+<h2>Hero List</h2>
+<p><i>Pick a hero from the list</i></p>
+<ul>
+	<li *ngFor="let hero of heroes" (click)="selectHero(hero)">
+	{{hero.name}}
+	</li>
+</ul>
+<hero-detail *ngIf="selectedHero" [hero]="selectedHero"></hero-detail>
+```
 
 虽然这个模板使用典型的 HTML 元素 比如 `<h2>` 和 `<p>`， 它有些差异。
 像 `*ngFor`, `{{hero.name}}`, `(click)`,` [hero]` 以及 `<hero-detail>` 这些代码，它们使用的是 Angular的模板语法。
@@ -159,14 +178,16 @@ HeroDetailComponent 与 HeroListComponent 组件不同，它用于展示关于�
 
 在 TypeScript 中，我们通过 装饰器（decorator）来添加元数据。 以下代码是组件 HeroListComponent 的一些元数据：
 
-	@Component({
-		selector:    'hero-list',
-		templateUrl: './hero-list.component.html',
-		providers:  [ HeroService ]
-	})
-	export class HeroListComponent implements OnInit {
-		/* . . . */
-	}
+```typescript
+@Component({
+	selector:    'hero-list',
+	templateUrl: './hero-list.component.html',
+	providers:  [ HeroService ]
+})
+export class HeroListComponent implements OnInit {
+	/* . . . */
+}
+```
 
 装饰器 @Component 把紧挨着它的类指定为一个组件类。
 
@@ -196,14 +217,17 @@ HeroDetailComponent 与 HeroListComponent 组件不同，它用于展示关于�
 
 Angular 支持数据绑定，一种使模板各部分与组件各部分相互配合的机制。在模板的 HTML 中添加绑定的标记来告诉 Angular 如何连接这两部分。
 
+![](https://angular.io/generated/images/guide/architecture/databinding.png)
+
 正如这张图片所示，Angular 有4种数据绑定的方式。每种方式都有（数据流动的）方向：可能是从 DOM 到组件，也可能是从 组件到 DOM， 也可能是双向的。
 
 组件 HeroListComponent 的示例模板中 有三种形式：
 
-	<li>{{hero.name}}</li>
-	<hero-detail [hero]="selectedHero"></hero-detail>
-	<li (click)="selectHero(hero)"></li>
-
+```html
+<li>{{hero.name}}</li>
+<hero-detail [hero]="selectedHero"></hero-detail>
+<li (click)="selectHero(hero)"></li>
+```
 
 1）插值表达式（interpolation）：插值表达式 `{{ hero.name }}` 在 `<li> `元素之间展示组件的 hero.name 属性值。
 
@@ -214,16 +238,137 @@ Angular 支持数据绑定，一种使模板各部分与组件各部分相互配
 
 双向绑定是第四种重要的绑定方法。它使用 `[(ngModel)]` 指令，在一个表达式中同时绑定属性和事件。
 
-	<input [(ngModel)]="hero.name">
-
+```html
+<input [(ngModel)]="hero.name">
+```
 
 在双向绑定中，数据的属性值像属性绑定一样，从组件流向 input 输入框。用户输入值改变，数据从 input　输入框流回到组件，将最后的值重置为组件里的属性的值，正如事件绑定一样。
+
+Angular processes all data bindings once per JavaScript event cycle, from the root of the application component tree through all child components.
+
+每次 JavaScript 事件循环，Angular 都会处理所有的数据绑定，从应用组件的根部到所有的子组件。
+
+Data binding plays an important role in communication between a template and its component.
+
+数据绑定在组件与其模板的通讯中起着重要的作用。
+
+![](https://angular.io/generated/images/guide/architecture/component-databinding.png)
+
+Data binding is also important for communication between parent and child components.
+
+数据绑定在父、子组件的通讯中也起着重要的作用。
+
+![](https://angular.io/generated/images/guide/architecture/parent-child-binding.png)
 
 
 ## 6. 指令 Directives
 
+Angular 模板是动态的。当 Angular 渲染模板时，它会根据指令（directives）给的指示去动态地改变 DOM.
+
+指令是带有 @Directive 装饰器的类。组件是带有模板的指令。 @Component 装饰器实际上是  拓展了模板化功能的 @Directive 装饰器。
+
+虽然从技术上来说，组件是指令，但组件对于 Angular 应用来说非常地特别和重要，所以这个架构速览 把组件和指令分开来论述。
+
+还有两种指令：结构指令和属性指令。
+
+它们在元素标签中看起来像属性（attribute）那样工作。有时指令仅仅是以名字形式存在，更多地时候是作为赋值或者绑定的目标。
+
+结构指令可以通过增加、移除、替换 DOM 元素来改变布局。
+
+以下示例代码使用两种内置的结构指令：
+
+src/app/hero-list.component.html (structural)
+
+```html
+<li *ngFor="let hero of heroes"></li>
+<hero-detail *ngIf="selectedHero"></hero-detail>
+```
+
+`*ngFor `告知 Angular 在每一个 `<li>` 标签中展示 heroes 列表中的 hero.
+
+只有当 selectedHero 存在时，`*ngIf` 才会把 HeroDetail 组件包含进来。
+
+属性指令（Attribute directives）改变已存在元素的外观或行为。在模板中，它们看起来像是普通的 HTML 属性，故得名属性指令。
+
+`ngModel` 指令使用双向的数据绑定。它是典型的属性指令。 通过设置元素显示的值以及响应 change 事件，`ngModel`指令改变已存在元素（尤其是 input）的行为。
+
+src/app/hero-detail.component.html (ngModel)
+
+```html
+<input [(ngModel)]="hero.name">
+```
+
+Angular 还有许多指令。有些可以改变布局结构（比如 ngSwitch），有些则可以改变 DOM 元素和组件的外观（比如 ngStyle、ngClass）。
+
+当然，我们还可以编写自定义的指令。像 HeroListComponent 的组件，可以看做是一种自定义指令。
 
 ## 7. 服务 Services
+
+服务（Service）是一个很宽泛的类别，包括应用需要的任何值、函数、或者功能。
+
+几乎任何东西都可以是服务。服务是一个典型的类，它作用有限且定义明确。它应该很好地完成特定的任务。
+
+例如：
+
+logging service
+
+- logging service 日志服务
+- data service 数据服务
+- message bus 消息总线
+- tax calculator 税收计算器
+- application configuration 应用配置
+
+关于服务，没有什么Angular特性。没有关于服务的定义，没有服务的基类，也没有地方注册服务。
+
+然而，服务对于任何 Angular 应用都是至关重要的。组件是服务的主要使用者。
+
+以下是一个在浏览器控制台打印日志的服务类的示例代码：
+
+src/app/logger.service.ts (class)
+
+```
+content_copyexport class Logger {
+  log(msg: any)   { console.log(msg); }
+  error(msg: any) { console.error(msg); }
+  warn(msg: any)  { console.warn(msg); }
+}
+```
+
+这个 HeroService 使用 `Promise` 来获取 heroes 数据。它基于 Logger 服务和另外一个处理服务器通讯的枯燥工作的 BackendService 服务。
+
+src/app/hero.service.ts (class)
+
+```
+content_copyexport class HeroService {
+  private heroes: Hero[] = [];
+
+  constructor(
+    private backend: BackendService,
+    private logger: Logger) { }
+
+  getHeroes() {
+    this.backend.getAll(Hero).then( (heroes: Hero[]) => {
+      this.logger.log(`Fetched ${heroes.length} heroes.`);
+      this.heroes.push(...heroes); // fill cache
+    });
+    return this.heroes;
+  }
+}
+```
+
+到处都有服务。
+
+组件类应该是精简的。它们不从服务器中获取数据，不验证用户的输入或者直接在控制台打印日志。它们授权服务来处理这些任务。
+
+组件的工作只是实现用户体验，不做其他的事情。它周旋于视图（由模板渲染）和应用逻辑（通常包含一些模型的概念）。 好的组件展示数据绑定的属性和方法。它授权服务处理其他重要的事情。
+
+Angular 并不强制要求执行这些原则。它不会抱怨你用 3000 行代码写一个 kitchen sink 组件。
+
+Angular does help you *follow* these principles by making it easy to factor your application logic into services and make those services available to components through *dependency injection*.
+
+Angular 帮我们遵循这些原则，它使得在服务中考虑应用逻辑很容易，并且通过`依赖注入（dependency injection）`使得服务在组件中可用。
+
+
 
 
 ## 8. 依赖注入 Dependency injection
