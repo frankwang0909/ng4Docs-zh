@@ -123,9 +123,6 @@ export class AppComponent {
 }
 ```
 
-
-Now use the Angular `ngFor` directive in the template to display each item in the `heroes` list.
-
 现在在 模板中使用 Angular 的`*ngFor`指令来展示英雄列表的每一项内容。
 
 src/app/app.component.ts (template)
@@ -153,31 +150,33 @@ src/app/app.component.ts (li)
 </li>
 ```
 
-Don't forget the leading asterisk (*) in `*ngFor`. It is an essential part of the syntax. For more information, see the [Template Syntax](https://angular.io/guide/template-syntax#ngFor) page.
+** 不要忘了`ngFor` 前面的星号`\*`， 它是这个指令语法必不可少的组成部分。 更多的内容，请查阅 [模板语法章节](https://angular.io/guide/template-syntax#ngFor) **。
 
-Notice the `hero` in the `ngFor` double-quoted instruction; it is an example of a template input variable. Read more about template input variables in the [microsyntax](https://angular.io/guide/template-syntax#microsyntax) section of the [Template Syntax](https://angular.io/guide/template-syntax) page.
+注意 在`*ngFor` 指令的双引号之间的 `hero` 是模板的输入变量。更多关于模板输入变量的信息，请查阅模板语法章节的 [微语法部分](https://angular.io/guide/template-syntax#microsyntax) 。
 
-Angular duplicates the `` for each item in the list, setting the `hero` variable to the item (the hero) in the current iteration. Angular uses that variable as the context for the interpolation in the double curly braces.
+Angular 为列表中的每一项复制了`<li>`标签， 把 `hero` 变量设置为当前循环的值。Angular 把这个变量作为 双花括号里插值表达式的上下文。
 
-In this case, `ngFor` is displaying an array, but `ngFor` can repeat items for any [iterable](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols) object.
+在这个例子中，`ngFor` 展示了一个数组， 但`ngFor`  可用于循环任何`可迭代对象`的。
 
-Now the heroes appear in an unordered list.
+现在，英雄们出现在一个无序列表中：
 
 ![After ngfor](https://angular.io/generated/images/guide/displaying-data/hero-names-list.png)
 
 
 
-## 5.为数据创建一个类
+## 5.为数据创建类
 
-The app's code defines the data directly inside the component, which isn't best practice. In a simple demo, however, it's fine.
+这个应用的代码直接在组件里定义数据，这不是最好的实现方式。当然，在一个简单的 demo 的，这样写没什么问题。
 
-At the moment, the binding is to an array of strings. In real applications, most bindings are to more specialized objects.
+现在，这里绑定的是一个字符串数组。在实际的应用中，绑定的是大多是专门的对象。
 
-To convert this binding to use specialized objects, turn the array of hero names into an array of `Hero` objects. For that you'll need a `Hero` class.
+为了将绑定改为使用专门的对象，我们把这个英雄名字的数组改写成 `Hero` 对象的数组（属性）。 为此，我们需要一个 `Hero` 类。
 
 Create a new file in the `app` folder called `hero.ts` with the following code:
 
-src/app/hero.ts (excerpt)
+在这个`app`文件夹里创建一个新的文件，命名为`hero.ts`， 代码如下：
+
+src/app/hero.ts 
 
 ```
 export class Hero {
@@ -187,11 +186,13 @@ export class Hero {
 }
 ```
 
-You've defined a class with a constructor and two properties: `id` and `name`.
+我们定义了一个类，他有一个构造函数和两个属性（`id` 和 `name`)
 
 It might not look like the class has properties, but it does. The declaration of the constructor parameters takes advantage of a TypeScript shortcut.
 
-Consider the first parameter:
+它也许看起来不像一个带有属性的类，但他确实是有属性的。这个构造函数参数的声明使用了 `TypeScript` 的一种（定义属性的）快捷方式。
+
+想想最初的参数：
 
 src/app/hero.ts (id)
 
@@ -199,15 +200,19 @@ src/app/hero.ts (id)
 public id: number,
 ```
 
-That brief syntax does a lot:
+这种简写语法做了许多事情：
 
-- Declares a constructor parameter and its type.
-- Declares a public property of the same name.
-- Initializes that property with the corresponding argument when creating an instance of the class.
+- 声明构造函数的参数及其类型。
+
+- 声明公开的同名的属性。
+
+- 创建类的实例时，根据相应的参数初始化属性。
+
+  ​
 
 ### 5.1 使用 Hero 类
 
-After importing the `Hero` class, the `AppComponent.heroes` property can return a *typed* array of `Hero` objects:
+在导入`Hero` 后，`AppComponent.heroes` 属性返回一个`Hero` 对象的数组
 
 src/app/app.component.ts (heroes)
 
