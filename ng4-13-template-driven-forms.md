@@ -134,31 +134,41 @@ It's an anemic model with few requirements and no behavior. Perfect for the demo
 
 The TypeScript compiler generates a public field for each `public` constructor parameter and automatically assigns the parameter’s value to that field when you create heroes.
 
-TypeScript 编译器
+当我们创建 hero 的实例时，TypeScript 编译器会为每一个带有`public` 修饰符的构造函数参数创建一个公共的字段，并且会自动将参数的值赋值给每个字段。
 
 The `alterEgo` is optional, so the constructor lets you omit it; note the question mark (?) in `alterEgo?`.
 
+`alterEgo` 的可选的，所以构造函数允许你省略它。注意在`alterEgo?` 里的问号（这个问号表示这个参数是可选的）。
+
 You can create a new hero like this:
+
+我们可以像这样实例化一个 hero：
 
 src/app/hero-form.component.ts (SkyDog)
 
-```
-content_copylet myHero =  new Hero(42, 'SkyDog',
+```typescript
+let myHero =  new Hero(42, 'SkyDog',
                        'Fetch any object at any distance',
                        'Leslie Rollover');
 console.log('My hero is called ' + myHero.name); // "My hero is called SkyDog"
 ```
 
-## [**](https://angular.io/guide/forms#create-a-form-component)Create a form component
+
+
+## 创建表单组件 Create a form component
 
 An Angular form has two parts: an HTML-based *template* and a component *class* to handle data and user interactions programmatically. Begin with the class because it states, in brief, what the hero editor can do.
 
+Angular 表单由两部分组成：基于 HTML 的模板 和 有计划地处理数据以及用户交互的组件类。先从 这个组件类开始，简单地说，是因为它声明了 hero 编辑器能够做什么。
+
 Create the following file with the given content:
+
+创建包含以下代码的文件：
 
 src/app/hero-form.component.ts (v1)
 
-```
-content_copyimport { Component } from '@angular/core';
+```typescript
+import { Component } from '@angular/core';
 
 import { Hero }    from './hero';
 
@@ -184,43 +194,82 @@ export class HeroFormComponent {
 
 There’s nothing special about this component, nothing form-specific, nothing to distinguish it from any component you've written before.
 
+这个组件没有特别的，没有表单专有的特性，也没有什么可以让它与我们之前写过的组件区别开来的特性。
+
 Understanding this component requires only the Angular concepts covered in previous pages.
 
+理解这个组件只需要我们在之前章节涉及的 Angular 概念。
+
 - The code imports the Angular core library and the `Hero` model you just created.
-- The `@Component` selector value of "hero-form" means you can drop this form in a parent template with a `` tag.
+- 导入 Angular 核心库文件 以及我们刚刚创建的 Hero 模型（实体类）。
+- The `@Component` selector value of "hero-form" means you can drop this form in a parent template with a `<hero-form>` tag.
+- `@component` 选择器的值是 ”hero-form" 意味着 我们可以把这表单以 `<hero-form>` 标签的形式放置在一个父模板中。
 - The `templateUrl` property points to a separate file for the template HTML.
+- `templateUrl` 属性 指向一个单独的 HTML 模板文件。
 - You defined dummy data for `model` and `powers`, as befits a demo.
+- 为了我们为 `model` 和 `powers` 定义了假的数据，适合用来做演示。
 
 Down the road, you can inject a data service to get and save real data or perhaps expose these properties as inputs and outputs (see [Input and output properties](https://angular.io/guide/template-syntax#inputs-outputs) on the [Template Syntax](https://angular.io/guide/template-syntax)page) for binding to a parent component. This is not a concern now and these future changes won't affect the form.
 
-- You added a `diagnostic` property to return a JSON representation of the model. It'll help you see what you're doing during development; you've left yourself a cleanup note to discard it later.
+将来，我们可以注入数据服务，来获取、保存真实的数据，或者为了绑定父组件把这些属性作为输入和输出（参见 模板语法一节的输入和输出属性部分） 暴露出去。
 
-### [**](https://angular.io/guide/forms#why-the-separate-template-file)Why the separate template file?
+- You added a `diagnostic` property to return a JSON representation of the model. It'll help you see what you're doing during development; you've left yourself a cleanup note to discard it later.
+- 我们添加了一个 `diagnostic` 属性，将这个模型（实体类）以 JSON 格式返回。它能帮我们看到我们在开发中正在做什么。我们还留了一条备注（TODO），提醒之后需要删除掉这个属性。
+
+### 为什么要使用单独的模板文件 Why the separate template file?
 
 Why don't you write the template inline in the component file as you often do elsewhere?
 
+为什么在这个组件文件中我们不像之前那样使用行内模板呢？
+
 There is no "right" answer for all occasions. Inline templates are useful when they are short. Most form templates aren't short. TypeScript and JavaScript files generally aren't the best place to write (or read) large stretches of HTML, and few editors help with files that have a mix of HTML and code.
+
+没有对所有场景都正确的回答。当行内模板很简短时，它是实用的。但大部分模板都不短。 TypeScript 和 JavaScript 文件通常不适合用来写（或者读）大段的 HTML，并且很少编辑器能够协助处理混合了大量 HTML 和代码的文件。
 
 Form templates tend to be large, even when displaying a small number of fields, so it's usually best to put the HTML template in a separate file. You'll write that template file in a moment. First, revise the `app.module.ts` and `app.component.ts` to make use of the new `HeroFormComponent`.
 
-## [**](https://angular.io/guide/forms#revise-appmodulets)Revise *app.module.ts*
+表单模板通常很大，即便是展示一小部分的字段，所以把 HTML 模板放在单独的文件中通常是最好的做法。我们等会将会编写这个模板文件。为了使用新的组件 `HeroFormComponent` ，我们得先修改 `app.module.ts` 和 `app.component.ts` 文件。
+
+
+
+## 修改 app.module.ts Revise *app.module.ts*
 
 `app.module.ts` defines the application's root module. In it you identify the external modules you'll use in the application and declare the components that belong to this module, such as the `HeroFormComponent`.
 
+`app.module.ts` 定义了应用的根模块。在根模块中，我们指定了将在这个应用中使用到的外部模块，并且声明了属于这个根模块的组件，比如 `HeroFormComponent` 。
+
 Because template-driven forms are in their own module, you need to add the `FormsModule` to the array of `imports` for the application module before you can use forms.
+
+由于模板驱动式表单在它们自己的模块中，在使用表单之前，我们需要添加 `FormsModule`  到应用模块的 imports 数组中。
 
 Replace the contents of the "QuickStart" version with the following:
 
 src/app/app.module.ts
 
-```
-content_copyimport { NgModule }      from '@angular/core';import { BrowserModule } from '@angular/platform-browser';import { FormsModule }   from '@angular/forms'; import { AppComponent }  from './app.component';import { HeroFormComponent } from './hero-form.component'; @NgModule({  imports: [    BrowserModule,    FormsModule  ],  declarations: [    AppComponent,    HeroFormComponent  ],  bootstrap: [ AppComponent ]})export class AppModule { }
+```typescript
+import { NgModule }  from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+
+import { FormsModule } from '@angular/forms'; 
+import { AppComponent } from './app.component';
+import { HeroFormComponent } from './hero-form.component'; 
+
+@NgModule({  
+	imports: [BrowserModule, FormsModule],
+	declarations: [AppComponent, HeroFormComponent],  
+	bootstrap: [AppComponent]
+})
+
+export class AppModule { }
+
 ```
 
 There are three changes:
 
-1. You import `FormsModule` and the new `HeroFormComponent`.
-2. You add the `FormsModule` to the list of `imports` defined in the `@NgModule` decorator. This gives the application access to all of the template-driven forms features, including `ngModel`.
+有以下3处修改：
+
+1. You import `FormsModule` and the new `HeroFormComponent`. 导入 `FormsModule` 和 `HeroFormComponent` 。 
+2. You add the `FormsModule` to the list of `imports` defined in the `@NgModule` decorator. This gives the application access to all of the template-driven forms features, including `ngModel`. 
 3. You add the `HeroFormComponent` to the list of `declarations` defined in the `@NgModule` decorator. This makes the `HeroFormComponent` component visible throughout this module.
 
 If a component, directive, or pipe belongs to a module in the `imports` array, ​*don't*​ re-declare it in the `declarations` array. If you wrote it and it should belong to this module, ​*do*​ declare it in the `declarations` array.
