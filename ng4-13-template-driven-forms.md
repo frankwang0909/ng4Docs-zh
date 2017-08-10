@@ -17,17 +17,23 @@ This page shows you how to build a simple form from scratch. Along the way you'l
 本节将告诉你如何从零开始创建一个简单的表单。接下来，我们将会学习如何：
 
 - Build an Angular form with a component and template.
-- 创建一个带有组件和模板的 Angular 表单。
+
+  创建一个带有组件和模板的 Angular 表单。
 - Use `ngModel` to create two-way data bindings for reading and writing input-control values.
-- 使用 `ngModel` 来双向绑定 input 输入框的值。
+
+  使用 `ngModel` 来双向绑定 input 输入框的值。
 - Track state changes and the validity of form controls.
-- 追踪表单控件的状态变化和有效性。
+
+  追踪表单控件的状态变化和有效性。
 - Provide visual feedback using special CSS classes that track the state of the controls.
-- 使用追踪控件状态的特殊 CSS 样式类来提供视觉上的反馈。
+
+  使用追踪控件状态的特殊 CSS 样式类来提供视觉上的反馈。
 - Display validation errors to users and enable/disable form controls.
-- 向用户展示验证错误信息以及启用或禁用表单控件。
+
+  向用户展示验证错误信息以及启用或禁用表单控件。
 - Share information across HTML elements using template reference variables.
-- 通过使用 模板引用变量（template reference variables）在 HTML 元素间分享信息。
+
+  通过使用 模板引用变量（template reference variables）在 HTML 元素间分享信息。
 
 在 Plunker 上可以运行[在线例子](https://angular.io/generated/live-examples/forms/eplnkr.html)或者[下载](https://angular.io/generated/zips/forms/forms.zip)这些示例代码。
 
@@ -83,15 +89,41 @@ You'll build this form in small steps:
 
 我们将按照以下步骤来构建这个表单。
 
-1. Create the `Hero` model class. 创建一个 hero 模型类。
-2. Create the component that controls the form. 创建一个控制这个表单的组件。
-3. Create a template with the initial form layout. 创建一个具有初始表单布局的模板。
-4. Bind data properties to each form control using the `ngModel` two-way data-binding syntax. 使用 `ngModel` 双向绑定语法，为每个表单控件绑定数据属性。
-5. Add a `name` attribute to each form-input control. 给每一个 表单输入控件增加一个 `name` 属性。
-6. Add custom CSS to provide visual feedback. 增加自定义 CSS 来提供视觉上的反馈。
-7. Show and hide validation-error messages. 显示或者隐藏验证错误消息。
-8. Handle form submission with *ngSubmit*. 用 `ngSubmit` 来处理表单提交。
-9. Disable the form’s *Submit* button until the form is valid. 禁用表单的 提交按钮，直到表单是有效的（即所有表单控件都符合通过验证规则）为止。
+1. Create the `Hero` model class. 
+
+   创建一个 hero 模型类（实体类）。
+
+2. Create the component that controls the form. 
+
+   创建一个控制这个表单的组件。
+
+3. Create a template with the initial form layout. 
+
+   创建一个具有初始表单布局的模板。
+
+4. Bind data properties to each form control using the `ngModel` two-way data-binding syntax. 
+
+   使用 `ngModel` 双向绑定语法，为每个表单控件绑定数据属性。
+
+5. Add a `name` attribute to each form-input control.
+
+    给每一个 表单输入控件增加一个 `name` 属性。
+
+6. Add custom CSS to provide visual feedback. 
+
+   增加自定义 CSS 来提供视觉上的反馈。
+
+7. Show and hide validation-error messages. 
+
+   显示或者隐藏验证错误消息。
+
+8. Handle form submission with *ngSubmit*. 
+
+   用 `ngSubmit` 来处理表单提交。
+
+9. Disable the form’s *Submit* button until the form is valid. 
+
+   禁用表单的 提交按钮，直到表单是有效的（即所有表单控件都符合通过验证规则）为止。
 
 ## 设置 Setup 
 
@@ -138,7 +170,7 @@ The TypeScript compiler generates a public field for each `public` constructor
 
 The `alterEgo` is optional, so the constructor lets you omit it; note the question mark (?) in `alterEgo?`.
 
-`alterEgo` 的可选的，所以构造函数允许你省略它。注意在`alterEgo?` 里的问号（这个问号表示这个参数是可选的）。
+`alterEgo` 是可选的，所以构造函数允许你省略它。注意在`alterEgo?` 里的问号（这个问号表示这个参数是可选的）。
 
 You can create a new hero like this:
 
@@ -201,20 +233,25 @@ Understanding this component requires only the Angular concepts covered in previ
 理解这个组件只需要我们在之前章节涉及的 Angular 概念。
 
 - The code imports the Angular core library and the `Hero` model you just created.
-- 导入 Angular 核心库文件 以及我们刚刚创建的 Hero 模型（实体类）。
+
+  导入 Angular 核心库文件 以及我们刚刚创建的 Hero 模型（实体类）。
 - The `@Component` selector value of "hero-form" means you can drop this form in a parent template with a `<hero-form>` tag.
-- `@component` 选择器的值是 ”hero-form" 意味着 我们可以把这表单以 `<hero-form>` 标签的形式放置在一个父模板中。
+
+  @component` 选择器的值是 ”hero-form" 意味着 我们可以把这表单以 `<hero-form>` 标签的形式放置在一个父模板中。
 - The `templateUrl` property points to a separate file for the template HTML.
-- `templateUrl` 属性 指向一个单独的 HTML 模板文件。
+
+  `templateUrl` 属性 指向一个单独的 HTML 模板文件。
 - You defined dummy data for `model` and `powers`, as befits a demo.
-- 为了我们为 `model` 和 `powers` 定义了假的数据，适合用来做演示。
+
+  为了我们为 `model` 和 `powers` 定义了假的数据，适合用来做演示。
 
 Down the road, you can inject a data service to get and save real data or perhaps expose these properties as inputs and outputs (see [Input and output properties](https://angular.io/guide/template-syntax#inputs-outputs) on the [Template Syntax](https://angular.io/guide/template-syntax)page) for binding to a parent component. This is not a concern now and these future changes won't affect the form.
 
 将来，我们可以注入数据服务，来获取、保存真实的数据，或者为了绑定父组件把这些属性作为输入和输出（参见 模板语法一节的输入和输出属性部分） 暴露出去。
 
 - You added a `diagnostic` property to return a JSON representation of the model. It'll help you see what you're doing during development; you've left yourself a cleanup note to discard it later.
-- 我们添加了一个 `diagnostic` 属性，将这个模型（实体类）以 JSON 格式返回。它能帮我们看到我们在开发中正在做什么。我们还留了一条备注（TODO），提醒之后需要删除掉这个属性。
+
+  我们添加了一个 `diagnostic` 属性，将这个模型（实体类）以 JSON 格式返回。它能帮我们看到我们在开发中正在做什么。我们还留了一条备注（TODO），提醒之后需要删除掉这个属性。
 
 ### 为什么要使用单独的模板文件 Why the separate template file?
 
@@ -268,22 +305,36 @@ There are three changes:
 
 有以下3处修改：
 
-1. You import `FormsModule` and the new `HeroFormComponent`. 导入 `FormsModule` 和 `HeroFormComponent` 。 
+1. You import `FormsModule` and the new `HeroFormComponent`. 
+
+   导入 `FormsModule` 和 `HeroFormComponent` 。 
+
 2. You add the `FormsModule` to the list of `imports` defined in the `@NgModule` decorator. This gives the application access to all of the template-driven forms features, including `ngModel`. 
+
+   把`FormsModule` 添加到 `@NgModule`  装饰器 里的 `imports` 列表中。这将让应用能够使用所有模板驱动式表单的功能，包括 `ngModel` 。
+
 3. You add the `HeroFormComponent` to the list of `declarations` defined in the `@NgModule` decorator. This makes the `HeroFormComponent` component visible throughout this module.
 
-If a component, directive, or pipe belongs to a module in the `imports` array, ​*don't*​ re-declare it in the `declarations` array. If you wrote it and it should belong to this module, ​*do*​ declare it in the `declarations` array.
+   把`HeroFormComponent` 添加到 `@NgModule`  装饰器 里的 `declarations` 列表中。这能让 组件 `HeroFormComponent`  在这个模块中都是可见的。
 
-## [**](https://angular.io/guide/forms#revise-appcomponentts)Revise *app.component.ts*
+​If a component, directive, or pipe belongs to a module in the `imports` array, *don't* re-declare it in the `declarations` array. If you wrote it and it should belong to this module, *do* declare it in the `declarations` array.
+
+如果一个组件、指令或者管道从属于 `imports` 数组中的一个模块，则不需要在 `declarations`  数组中重复声明。如果是我们自己编写且从属于这个模块的组件、指令或者管道，则需要在 `declarations`  数组中声明。
+
+##  修改 app.component.ts  Revise *app.component.ts*
 
 `AppComponent` is the application's root component. It will host the new `HeroFormComponent`.
 
+`AppComponent` 是应用的根组件。它将存放新的 `HeroFormComponent` 组件。
+
 Replace the contents of the "QuickStart" version with the following:
+
+用以下内容替换 "快速开始" 版本的 app.component.ts 文件的内容：
 
 src/app/app.component.ts
 
-```
-content_copyimport { Component } from '@angular/core';
+```typescript
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'my-app',
@@ -293,6 +344,10 @@ export class AppComponent { }
 ```
 
 There are only two changes. The `template` is simply the new element tag identified by the component's `selector` property. This displays the hero form when the application component is loaded. You've also dropped the `name` field from the class body.
+
+只有两处改动。`template` （的属性`<hero-form>` ）是个新的元素标签，由组件的 `selector` 属性指定。
+
+当应用的组件加载后，它会展示 这个 hero 表单。
 
 ## [**](https://angular.io/guide/forms#create-an-initial-html-form-template)Create an initial HTML form template
 
